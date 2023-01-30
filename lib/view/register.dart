@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:home_stay_application/view/login.dart';
-import 'package:http/http.dart' as http; 
+import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../config.dart';
-
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -17,21 +16,21 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  
   @override
-  void initState(){
+  void initState() {
     super.initState();
     loadEula();
   }
+
   final TextEditingController _nameEditingController = TextEditingController();
   final TextEditingController _emailditingController = TextEditingController();
-   final TextEditingController _phoneditingController = TextEditingController();
+  final TextEditingController _phoneditingController = TextEditingController();
   final TextEditingController _passEditingController = TextEditingController();
   final TextEditingController _pass2EditingController = TextEditingController();
 
-  bool _isChecked= false;
-  bool _passwordVisible=true;
-  final _formKey =GlobalKey<FormState>();
+  bool _isChecked = false;
+  bool _passwordVisible = true;
+  final _formKey = GlobalKey<FormState>();
   String eula = "";
 
   @override
@@ -46,77 +45,76 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 child: Form(
-                  key: _formKey,
-                    child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _nameEditingController,
-                        keyboardType: TextInputType.text,
-                        validator: (val) => val!.isEmpty || (val.length<5)
-                        ?"name must be longer than 5"
-                        :null,
-                        decoration: const InputDecoration(
-                            labelText: "Name",
-                            labelStyle: TextStyle(),
-                            icon: Icon(Icons.person),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(width: 1.0),
-                            ))),
-                    TextFormField(
-                      controller: _emailditingController,
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (val)=>val!.isEmpty ||
-                        !val.contains("@")||
-                        !val.contains(".")
-                        ?"enter a valid email"
-                        :null,
-                        decoration: const InputDecoration(
-                            labelText: "Email",
-                            labelStyle: TextStyle(),
-                            icon: Icon(Icons.email),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(width: 1.0),
-                            ))),
-                    TextFormField(
-                      controller: _phoneditingController,
-                        keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(
-                            labelText: "Phone",
-                            labelStyle: TextStyle(),
-                            icon: Icon(Icons.phone),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(width: 1.0),
-                            ))),
-                    TextFormField(
-                      controller: _passEditingController,
-                        keyboardType: TextInputType.visiblePassword,
-                        validator: (val)=> validatePassword(val.toString()),
-                        obscureText: _passwordVisible,
-                        decoration: InputDecoration(
+                    key: _formKey,
+                    child: Column(children: [
+                      TextFormField(
+                          controller: _nameEditingController,
+                          keyboardType: TextInputType.text,
+                          validator: (val) => val!.isEmpty || (val.length < 5)
+                              ? "name must be longer than 5"
+                              : null,
+                          decoration: const InputDecoration(
+                              labelText: "Name",
+                              labelStyle: TextStyle(),
+                              icon: Icon(Icons.person),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(width: 1.0),
+                              ))),
+                      TextFormField(
+                          controller: _emailditingController,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (val) => val!.isEmpty ||
+                                  !val.contains("@") ||
+                                  !val.contains(".")
+                              ? "enter a valid email"
+                              : null,
+                          decoration: const InputDecoration(
+                              labelText: "Email",
+                              labelStyle: TextStyle(),
+                              icon: Icon(Icons.email),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(width: 1.0),
+                              ))),
+                      TextFormField(
+                          controller: _phoneditingController,
+                          keyboardType: TextInputType.phone,
+                          decoration: const InputDecoration(
+                              labelText: "Phone",
+                              labelStyle: TextStyle(),
+                              icon: Icon(Icons.phone),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(width: 1.0),
+                              ))),
+                      TextFormField(
+                          controller: _passEditingController,
+                          keyboardType: TextInputType.visiblePassword,
+                          validator: (val) => validatePassword(val.toString()),
+                          obscureText: _passwordVisible,
+                          decoration: InputDecoration(
                             labelText: "Password",
                             labelStyle: const TextStyle(),
                             icon: const Icon(Icons.password),
                             focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(width: 1.0),
                             ),
-                             suffixIcon: IconButton(
+                            suffixIcon: IconButton(
                               icon: Icon(
-                             _passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                });
+                              },
                             ),
-                            onPressed: () {
-                             setState(() {
-                              _passwordVisible = !_passwordVisible;
-                             });
-                          },
-                        ),
-                            )),
-                    TextFormField(
-                      controller: _pass2EditingController,
-                        keyboardType: TextInputType.visiblePassword,
-                        obscureText: _passwordVisible,
-                        decoration: InputDecoration(
+                          )),
+                      TextFormField(
+                          controller: _pass2EditingController,
+                          keyboardType: TextInputType.visiblePassword,
+                          obscureText: _passwordVisible,
+                          decoration: InputDecoration(
                             labelText: "Re-Password",
                             labelStyle: const TextStyle(),
                             icon: const Icon(Icons.password),
@@ -125,65 +123,68 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             suffixIcon: IconButton(
                               icon: Icon(
-                             _passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                });
+                              },
                             ),
-                            onPressed: () {
-                             setState(() {
-                              _passwordVisible = !_passwordVisible;
-                             });
-                          },
-                        ),
-                            )), 
-            
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                 children: [
-                                   Checkbox(
-                                    value:_isChecked,
-                                    onChanged: (bool? value) {
-                                     setState(() {
-                                      _isChecked = value!;
-                                   });
-                                  },
-                             ),
+                          )),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Checkbox(
+                            value: _isChecked,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isChecked = value!;
+                              });
+                            },
+                          ),
                           Flexible(
-                          child: GestureDetector(
-                          onTap: _showEULA,
-                          child: const Text('Agree with terms',
-                         style: TextStyle(
-                          fontSize: 16,
-                           fontWeight: FontWeight.bold,
-                    )),
-             ),
-              ),
-                MaterialButton(
-                shape: RoundedRectangleBorder(
-               borderRadius: BorderRadius.circular(5.0)),
-                minWidth: 115,
-                height: 50,
-                elevation: 10,
-             onPressed: _registerAccountDialog,
-             color: Theme.of(context).colorScheme.primary,
-              child: const Text('Register'),
-             
-          ),
-],
-),
-                  
-                    
-                  ]
-                )
-                ),
+                            child: GestureDetector(
+                              onTap: _showEULA,
+                              child: const Text('Agree with terms',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
+                          ),
+                          MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            minWidth: 115,
+                            height: 50,
+                            elevation: 10,
+                            onPressed: _registerAccountDialog,
+                            color: Theme.of(context).colorScheme.primary,
+                            child: const Text('Register'),
+                          ),
+                          MaterialButton(
+                            //ni boleh buang oh
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            minWidth: 115,
+                            height: 50,
+                            elevation: 10,
+                            onPressed: _goLogin,
+                            color: Theme.of(context).colorScheme.primary,
+                            child: const Text('Login'),
+                          ),
+                        ],
+                      ),
+                    ])),
               ),
             ),
-            
           ),
-          
         ));
   }
 
@@ -202,14 +203,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _registerAccountDialog() {
-    String _name =_nameEditingController.text;
-    String _email=_emailditingController.text;
-    String _phone=_phoneditingController.text;
-    String _pass=_passEditingController.text;
-    String _pass2=_pass2EditingController.text;
+    String _name = _nameEditingController.text;
+    String _email = _emailditingController.text;
+    String _phone = _phoneditingController.text;
+    String _pass = _passEditingController.text;
+    String _pass2 = _pass2EditingController.text;
 
-    if (!_formKey.currentState!.validate()){
-     Fluttertoast.showToast(
+    if (!_formKey.currentState!.validate()) {
+      Fluttertoast.showToast(
           msg: "Please complete the registration form first",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
@@ -217,7 +218,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           fontSize: 14.0);
       return;
     }
-    if(!_isChecked){
+    if (!_isChecked) {
       Fluttertoast.showToast(
           msg: "Please Accept Term",
           toastLength: Toast.LENGTH_SHORT,
@@ -227,7 +228,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    if (_pass!=_pass2){
+    if (_pass != _pass2) {
       Fluttertoast.showToast(
           msg: "Please Check your password",
           toastLength: Toast.LENGTH_SHORT,
@@ -244,31 +245,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           title: const Text(
             "Register new account?",
-            style: TextStyle(
-               
-            ),
+            style: TextStyle(),
           ),
-          content: const Text("Are you sure?",
-              style: TextStyle()),
+          content: const Text("Are you sure?", style: TextStyle()),
           actions: <Widget>[
             TextButton(
               child: const Text(
                 "Yes",
-                style: TextStyle(
-                   
-                ),
+                style: TextStyle(),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                _registerUser(_name,_email,_phone,_pass);
+                _registerUser(_name, _email, _phone, _pass);
               },
             ),
             TextButton(
               child: const Text(
                 "No",
-                style: TextStyle(
-                   
-                ),
+                style: TextStyle(),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -278,9 +272,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
       },
     );
-}
+  }
 
-  loadEula() async{
+  loadEula() async {
     eula = await rootBundle.loadString('assets/eula.txt');
     print(eula);
   }
@@ -293,9 +287,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return AlertDialog(
           title: const Text(
             "EULA",
-            style: TextStyle(
-               
-            ),
+            style: TextStyle(),
           ),
           content: SizedBox(
             height: 200,
@@ -309,7 +301,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     textAlign: TextAlign.justify,
                     text: TextSpan(
                         style: const TextStyle(
-                           color: Colors.black,
+                          color: Colors.black,
                           fontSize: 12.0,
                         ),
                         text: eula),
@@ -332,11 +324,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       },
     );
   }
-  
-  void _registerUser(String name,String phone,String email,String pass) {
-     try {
-      http.post(Uri.parse("${Config.SERVER}/php/register_user.php"),
-       body: {
+  void _registerUser(String name, String email, String phone, String pass) {
+    try {
+      http.post(Uri.parse("${Config.SERVER}/php/register_user.php"), body: {
         "name": name,
         "email": email,
         "phone": phone,
@@ -351,8 +341,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 1,
               fontSize: 14.0);
-               Navigator.push(context,
-            MaterialPageRoute(builder: (content) => const LoginSreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (content) => const LoginScreen()));
           return;
         } else {
           Fluttertoast.showToast(
@@ -369,5 +359,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  void _goLogin() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (content) => const LoginScreen()));
   }
 }
